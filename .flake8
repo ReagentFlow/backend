@@ -1,0 +1,9 @@
+[flake8]
+exclude=
+    .git,
+    .mypy_cache,
+    __pycache__,
+    venv
+filename = *.py
+max-complexity = 12
+max-line-length = 120
