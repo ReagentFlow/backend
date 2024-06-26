@@ -3,8 +3,9 @@ exclude=
     .git,
     .mypy_cache,
     __pycache__,
-    venv
-    tests.py
+    venv,
+    tests.py,
+    migrations,
 filename = *.py
 max-complexity = 12
 max-line-length = 120
