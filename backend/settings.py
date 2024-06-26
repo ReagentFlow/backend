@@ -27,11 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS: list[str] = []
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
+REST_FRAMEWORK = {"DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",)}
 
 # Application definition
 
@@ -46,7 +42,7 @@ INSTALLED_APPS = [
     "djoser",
     "rest_framework_simplejwt",
 
-    'authentication.apps.AuthenticationConfig',
+    "authentication.apps.AuthenticationConfig",
 ]
 
 MIDDLEWARE = [
