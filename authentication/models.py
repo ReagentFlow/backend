@@ -26,15 +26,21 @@ class MyUserManager(UserManager):
 
 
 class User(AbstractUser):
-    email = models.EmailField(_("email address"), unique=True)
-    middle_name = models.CharField(_("middle name"), max_length=150, blank=True)
-    username = None
-
     objects = MyUserManager()
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["last_name", "first_name"]
+
+    ROLES = {
+        "admin": "Admin",
+        "user": "User",
+    }
+
+    email = models.EmailField(_("email address"), unique=True)
+    middle_name = models.CharField(_("middle name"), max_length=150, blank=True)
+    username = None
+    role = models.CharField(_("role"), max_length=5, choices=ROLES.items(), default=ROLES["user"])
 
     def __str__(self):
         return f"{self.last_name} {self.first_name} {self.middle_name}"
@@ -44,3 +50,10 @@ class User(AbstractUser):
         verbose_name = _("user")
         verbose_name_plural = _("users")
         swappable = "AUTH_USER_MODEL"
+
+
+class InviteCode(models.Model):
+    code = models.CharField(max_length=8, unique=True)
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_invites")
+    role = models.CharField(max_length=5, Choices=User.ROLES)
