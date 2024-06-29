@@ -5,8 +5,6 @@ from django.utils.translation import gettext_lazy as _
 
 class MyUserManager(UserManager):
     def _create_user(self, email, password, **extra_fields):
-        if not email:
-            raise ValueError("Указанный адрес электронной почты должен быть установлен")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
@@ -18,10 +16,11 @@ class MyUserManager(UserManager):
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, username, email=None, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("role", User.ROLES["admin"])
         return self._create_user(email, password, **extra_fields)
 
 
@@ -55,5 +54,5 @@ class User(AbstractUser):
 class InviteCode(models.Model):
     code = models.CharField(max_length=8, unique=True)
     is_active = models.BooleanField(default=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_invites")
-    role = models.CharField(max_length=5, Choices=User.ROLES)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="invite_codes")
+    role = models.CharField(max_length=5, choices=User.ROLES)
