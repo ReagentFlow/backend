@@ -45,6 +45,7 @@ class User(AbstractUser):
         return f"{self.last_name} {self.first_name} {self.middle_name}"
 
     class Meta(AbstractUser.Meta):
+        #unique_together = ("email", "invite_codes__code") решения для след задачи
         ordering = ("last_name", "first_name")
         verbose_name = _("user")
         verbose_name_plural = _("users")

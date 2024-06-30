@@ -51,7 +51,7 @@ class InviteCodeView(APIView):
     @staticmethod
     def post(request):
         role = request.data.get("role")
-        if role not in User.ROLES:
+        if role not in User.ROLES or (role == "admin" and request.user.role != "admin"):
             return Response({"error": "Invalid role"}, status=status.HTTP_400_BAD_REQUEST)
         invite_code = InviteCode.objects.create(code=generate_unique_string(8), role=role, created_by=request.user)
         serializer = InviteCodeSerializer(invite_code)
