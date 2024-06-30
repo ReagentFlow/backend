@@ -8,6 +8,17 @@ from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
 
+class InviteCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InviteCode
+        fields = (
+            "id",
+            "code",
+            "role",
+            "is_active",
+        )
+
+
 class UserCreateSerializer(BaseUserCreateSerializer):
     invite_code = serializers.CharField(max_length=8)
 

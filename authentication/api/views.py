@@ -10,8 +10,7 @@ from djoser.conf import settings
 
 from authentication.models import User, InviteCode
 from authentication.utils import generate_unique_string
-
-from authentication.serializers import UserCreateSerializer
+from authentication.serializers import UserCreateSerializer, InviteCodeSerializer
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -46,7 +45,8 @@ class InviteCodeView(APIView):
     @staticmethod
     def get(request):
         invite_codes = request.user.invite_codes.all()
-        return Response({"invite_codes": [invite_code.code for invite_code in invite_codes]})
+        serializer = InviteCodeSerializer(invite_codes, many=True)
+        return Response({"invite_codes": [invite_code for invite_code in serializer.data]})
 
     @staticmethod
     def post(request):
@@ -54,4 +54,5 @@ class InviteCodeView(APIView):
         if role not in User.ROLES:
             return Response({"error": "Invalid role"}, status=status.HTTP_400_BAD_REQUEST)
         invite_code = InviteCode.objects.create(code=generate_unique_string(8), role=role, created_by=request.user)
-        return Response({"invite_code": invite_code.code}, status=status.HTTP_201_CREATED)
+        serializer = InviteCodeSerializer(invite_code)
+        return Response({"invite_code": serializer.data}, status=status.HTTP_201_CREATED)
