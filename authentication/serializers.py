@@ -1,12 +1,11 @@
 from django.contrib.auth.password_validation import validate_password
+from django.core import exceptions as django_exceptions
+from django.utils.translation import gettext_lazy as _
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from rest_framework import serializers
 from rest_framework.settings import api_settings
 
-from authentication.models import User, InviteCode
-from django.core import exceptions as django_exceptions
-from rest_framework import serializers
-from django.utils.translation import gettext_lazy as _
-
+from authentication.models import InviteCode, User
 from authentication.utils import generate_unique_string
 
 
@@ -36,7 +35,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data.pop('invite_code', None)
+        data.pop("invite_code", None)
         return data
 
     def validate(self, attrs):
@@ -61,8 +60,6 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             validate_password(password, user)
         except django_exceptions.ValidationError as e:
             serializer_error = serializers.as_serializer_error(e)
-            raise serializers.ValidationError(
-                {"password": serializer_error[api_settings.NON_FIELD_ERRORS_KEY]}
-            )
+            raise serializers.ValidationError({"password": serializer_error[api_settings.NON_FIELD_ERRORS_KEY]})
 
         return attrs
