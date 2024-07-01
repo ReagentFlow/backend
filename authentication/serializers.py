@@ -7,6 +7,8 @@ from django.core import exceptions as django_exceptions
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
+from authentication.utils import generate_unique_string
+
 
 class InviteCodeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,6 +48,9 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         role = invite_code.role
         attrs["role"] = role
         del attrs["invite_code"]
+
+        invite_code.code = generate_unique_string(8)
+        invite_code.save()
 
         user = User(**attrs)
         password = attrs.get("password")

@@ -53,6 +53,9 @@ class InviteCodeView(APIView):
         role = request.data.get("role")
         if role not in User.ROLES.values():
             return Response({"error": "Invalid role"}, status=status.HTTP_400_BAD_REQUEST)
+        elif InviteCode.objects.filter(role=role, created_by=request.user).exists():
+            return Response({"error": "You already have an active invite code for this role"},
+                            status=status.HTTP_400_BAD_REQUEST)
         invite_code = InviteCode.objects.create(code=generate_unique_string(8), role=role, created_by=request.user)
         serializer = InviteCodeSerializer(invite_code)
         return Response({"invite_code": serializer.data}, status=status.HTTP_201_CREATED)
