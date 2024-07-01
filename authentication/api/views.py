@@ -1,6 +1,5 @@
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,6 +10,7 @@ from djoser.conf import settings
 from authentication.models import User, InviteCode
 from authentication.utils import generate_unique_string
 from authentication.serializers import UserCreateSerializer, InviteCodeSerializer
+from authentication.api.permissions import IsAuthenticatedAndAdmin
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -40,7 +40,7 @@ class UserViewSet(DjoserUserViewSet):
 
 
 class InviteCodeView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedAndAdmin]
 
     @staticmethod
     def get(request):
@@ -51,7 +51,7 @@ class InviteCodeView(APIView):
     @staticmethod
     def post(request):
         role = request.data.get("role")
-        if role not in User.ROLES or (role == "admin" and request.user.role != "admin"):
+        if role not in User.ROLES.values():
             return Response({"error": "Invalid role"}, status=status.HTTP_400_BAD_REQUEST)
         invite_code = InviteCode.objects.create(code=generate_unique_string(8), role=role, created_by=request.user)
         serializer = InviteCodeSerializer(invite_code)
