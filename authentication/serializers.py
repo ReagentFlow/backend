@@ -17,7 +17,6 @@ class InviteCodeSerializer(serializers.ModelSerializer):
             "id",
             "code",
             "role",
-            "is_active",
         )
 
 
@@ -30,6 +29,9 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "email",
             "password",
             "invite_code",
+            "first_name",
+            "last_name",
+            "middle_name",
         )
 
     def to_representation(self, instance):
@@ -41,7 +43,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         code = attrs.get("invite_code", None)
         if not code:
             raise serializers.ValidationError({"invite_code": _("This field is required.")})
-        elif not InviteCode.objects.filter(code=code, is_active=True).exists():
+        elif not InviteCode.objects.filter(code=code).exists():
             raise serializers.ValidationError({"invite_code": _("Invalid invite code.")})
 
         invite_code = InviteCode.objects.get(code=code)

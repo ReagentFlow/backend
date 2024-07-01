@@ -37,7 +37,9 @@ class User(AbstractUser):
     }
 
     email = models.EmailField(_("email address"), unique=True)
-    middle_name = models.CharField(_("middle name"), max_length=150, blank=True)
+    first_name = models.CharField(_("first name"), max_length=30, blank=False, null=False)
+    middle_name = models.CharField(_("middle name"), max_length=30, blank=True, null=True)
+    last_name = models.CharField(_("last name"), max_length=30, blank=False, null=False)
     username = None
     role = models.CharField(_("role"), max_length=5, choices=ROLES.items(), default=ROLES["user"])
 
@@ -45,7 +47,6 @@ class User(AbstractUser):
         return f"{self.last_name} {self.first_name} {self.middle_name}"
 
     class Meta(AbstractUser.Meta):
-        #unique_together = ("email", "invite_codes__code") решения для след задачи
         ordering = ("last_name", "first_name")
         verbose_name = _("user")
         verbose_name_plural = _("users")
@@ -54,6 +55,5 @@ class User(AbstractUser):
 
 class InviteCode(models.Model):
     code = models.CharField(max_length=8, unique=True)
-    is_active = models.BooleanField(default=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="invite_codes")
     role = models.CharField(max_length=5, choices=User.ROLES)
