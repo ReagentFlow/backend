@@ -28,7 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS: list[str] = ['0.0.0.0', 'localhost']
 
-REST_FRAMEWORK = {"DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",)}
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 # Application definition
 
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     "djoser",
     "rest_framework_simplejwt",
     "corsheaders",
+    'django_filters',
 
     "authentication.apps.AuthenticationConfig",
     "reagents.apps.ReagentsConfig",
