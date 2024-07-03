@@ -3,27 +3,26 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
 from reagents.serializer import ContainerSerializer
 from reagents.models import Container
-from rest_framework.permissions import IsAuthenticated
+from authentication.api.permissions import IsAdminOrReadOnly
 
 
 class ContainerModelViewSet(ModelViewSet):
     serializer_class = ContainerSerializer
     queryset = Container.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class ReagentsViewSet(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        summary = Container.objects.values('cas', 'qualification',
-                                           'name', 'formula',
-                                           'density', 'location',
-                                           'precursor').annotate(total_volume=Sum('volume'), total_mass=Sum('mass'))
-
+        summary = Container.objects.values('cas', 'qualification', 'name',
+                                           'formula', 'density', 'precursor').annotate(total_volume=Sum('volume'),
+                                                                                       total_mass=Sum('mass'))
         data = [
             {
                 'name': item['name'],
@@ -31,7 +30,6 @@ class ReagentsViewSet(APIView):
                 'mass': item['total_mass'],
                 'volume': item['total_volume'],
                 'density': item['density'],
-                'location': item['location'],
                 'precursor': item['precursor'],
                 'cas': item['cas'],
                 'qualification': item['qualification'],
