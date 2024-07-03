@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from authentication.models import User
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 
 class IsAuthenticatedAndAdmin(BasePermission):
     def has_permission(self, request, view):
