@@ -6,14 +6,18 @@ from rest_framework.viewsets import ModelViewSet
 
 from reagents.serializer import ContainerSerializer
 from reagents.models import Container
+from rest_framework.permissions import IsAuthenticated
 
 
 class ContainerModelViewSet(ModelViewSet):
     serializer_class = ContainerSerializer
     queryset = Container.objects.all()
+    permission_classes = [IsAuthenticated]
 
 
 class ReagentsViewSet(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         summary = Container.objects.values('cas', 'qualification',
                                            'name', 'formula',
