@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-0-4lscon^i=h9=celbe5_i2f#9zp&_ng0iciu)1pq4+e#+nu5)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS: list[str] = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
