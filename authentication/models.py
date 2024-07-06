@@ -31,9 +31,12 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["last_name", "first_name", "middle_name", "role"]
 
+    ADMIN = "admin"
+    USER = "user"
+
     ROLES = {
-        "admin": "Admin",
-        "user": "User",
+        ADMIN: "admin",
+        USER: "user",
     }
 
     email = models.EmailField(_("email address"), unique=True)
