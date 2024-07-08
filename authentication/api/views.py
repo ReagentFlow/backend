@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from djoser import signals
 from djoser.compat import get_user_email
 from djoser.conf import settings
@@ -13,6 +14,19 @@ from authentication.utils import generate_unique_string
 
 
 class UserViewSet(DjoserUserViewSet):
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+
+        if settings.HIDE_USERS and self.action == "list" and user.role == User.USER:
+            queryset = queryset.filter(pk=user.pk)
+
+        return queryset
+
     def perform_create(self, serializer, *args, **kwargs):
         user = serializer.save(*args, **kwargs)
 
