@@ -26,9 +26,12 @@ SECRET_KEY = "django-insecure-0-4lscon^i=h9=celbe5_i2f#9zp&_ng0iciu)1pq4+e#+nu5)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS: list[str] = ['0.0.0.0', 'localhost', '127.0.0.1']
 
-REST_FRAMEWORK = {"DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",)}
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 # Application definition
 
@@ -43,8 +46,10 @@ INSTALLED_APPS = [
     "djoser",
     "rest_framework_simplejwt",
     "corsheaders",
+    'django_filters',
 
     "authentication.apps.AuthenticationConfig",
+    "reagents.apps.ReagentsConfig",
 ]
 
 MIDDLEWARE = [
@@ -88,14 +93,17 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get("SQL_DATABASE", "test_db"),
         'USER': os.environ.get("SQL_USER", "root"),
+        #'USER': os.environ.get("SQL_USER", "admin"),
         'PASSWORD': os.environ.get("SQL_PASSWORD", "root"),
+        #'PASSWORD': os.environ.get("SQL_PASSWORD", "1"),
         'HOST': os.environ.get("SQL_HOST", "172.20.0.4"),
+        #'HOST': os.environ.get("SQL_HOST", "localhost"),
         'PORT': os.environ.get("SQL_PORT", "5432"),
     }
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,

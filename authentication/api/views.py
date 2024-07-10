@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from djoser import signals
 from djoser.compat import get_user_email
 from djoser.conf import settings
@@ -13,11 +14,21 @@ from authentication.utils import generate_unique_string
 
 
 class UserViewSet(DjoserUserViewSet):
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+
+        if settings.HIDE_USERS and self.action == "list" and user.role == User.USER:
+            queryset = queryset.filter(pk=user.pk)
+
+        return queryset
+
     def perform_create(self, serializer, *args, **kwargs):
-        validated_data = serializer.validated_data
-        user = User.objects.create(**validated_data)
-        user.set_password(validated_data["password"])
-        user.save()
+        user = serializer.save(*args, **kwargs)
 
         signals.user_registered.send(sender=self.__class__, user=user, request=self.request)
 
@@ -32,8 +43,8 @@ class UserViewSet(DjoserUserViewSet):
         serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.validated_data)
-        return Response(serializer.validated_data, status=status.HTTP_201_CREATED, headers=headers)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class InviteCodeView(APIView):
