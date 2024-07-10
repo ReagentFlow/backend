@@ -21,6 +21,7 @@ class InviteCodeSerializer(serializers.ModelSerializer):
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     invite_code = serializers.CharField(max_length=8, write_only=True)
+    re_password = serializers.CharField(max_length=128, write_only=True)
 
     class Meta:
         model = User
@@ -31,9 +32,11 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "first_name",
             "last_name",
             "middle_name",
+            "re_password",
         )
 
     def create(self, validated_data):
+        validated_data.pop("re_password")
         password = validated_data.pop("password")
         invite_code = validated_data.pop("invite_code")
 
@@ -59,6 +62,12 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
         if not InviteCode.objects.filter(code=code).exists():
             raise serializers.ValidationError({"invite_code": _("Invalid invite code.")})
+
+        password = attrs.get("password", None)
+        re_password = attrs.get("re_password", None)
+
+        if password is None or re_password is None or password != re_password:
+            raise serializers.ValidationError({"re_password": _("Doesn't match the password.")})
 
         invite_code = InviteCode.objects.get(code=code)
         attrs["role"] = invite_code.role
