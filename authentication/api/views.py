@@ -39,10 +39,23 @@ class UserViewSet(DjoserUserViewSet):
         elif settings.SEND_CONFIRMATION_EMAIL:
             settings.EMAIL.confirmation(self.request, context).send(to)
 
+        return user
+
+    @staticmethod
+    def create_invite_codes(data, user):
+        admin_code = generate_unique_string(8)
+        user_code = generate_unique_string(8)
+        InviteCode.objects.create(created_by=user, code=admin_code, role=data.get("user"))
+        InviteCode.objects.create(created_by=user, code=user_code, role=data.get("admin"))
+
     def create(self, request, *args, **kwargs):
         serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        instance_user = self.perform_create(serializer)
+
+        if instance_user.role == "admin":
+            self.create_invite_codes(request.data, instance_user)
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
