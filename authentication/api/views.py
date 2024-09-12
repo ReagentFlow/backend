@@ -42,11 +42,11 @@ class UserViewSet(DjoserUserViewSet):
         return user
 
     @staticmethod
-    def create_invite_codes(data, user):
+    def create_invite_codes(user):
         admin_code = generate_unique_string(8)
         user_code = generate_unique_string(8)
-        InviteCode.objects.create(created_by=user, code=admin_code, role=data.get("user"))
-        InviteCode.objects.create(created_by=user, code=user_code, role=data.get("admin"))
+        InviteCode.objects.create(created_by=user, code=admin_code, role="user")
+        InviteCode.objects.create(created_by=user, code=user_code, role="admin")
 
     def create(self, request, *args, **kwargs):
         serializer = UserCreateSerializer(data=request.data)
@@ -54,7 +54,7 @@ class UserViewSet(DjoserUserViewSet):
         instance_user = self.perform_create(serializer)
 
         if instance_user.role == "admin":
-            self.create_invite_codes(request.data, instance_user)
+            self.create_invite_codes(instance_user)
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

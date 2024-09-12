@@ -2,6 +2,14 @@ from django.contrib.auth.models import AbstractUser, UserManager, make_password
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from authentication.utils import generate_unique_string
+
+def create_invite_codes(user):
+    admin_code = generate_unique_string(8)
+    user_code = generate_unique_string(8)
+    InviteCode.objects.create(created_by=user, code=admin_code, role="user")
+    InviteCode.objects.create(created_by=user, code=user_code, role="admin")
+
 
 class MyUserManager(UserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -9,6 +17,7 @@ class MyUserManager(UserManager):
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
         user.save(using=self._db)
+        create_invite_codes(user)
         return user
 
     def create_user(self, email, password=None, **extra_fields):
