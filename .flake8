@@ -6,6 +6,8 @@ exclude=
     venv,
     tests.py,
     migrations,
+    settings.py,
+    tests,
 filename = *.py
 max-complexity = 12
 max-line-length = 120
