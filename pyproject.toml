@@ -20,6 +20,7 @@ psycopg2 = "^2.9.9"
 psycopg2-binary = "^2.9.9"
 django-cors-headers = "^4.4.0"
 django-filter = "^24.2"
+drf-yasg = "^1.21.7"
 
 
 [build-system]
