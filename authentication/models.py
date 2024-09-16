@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from authentication.utils import generate_unique_string
 
+
 def create_invite_codes(user):
     admin_code = generate_unique_string(8)
     user_code = generate_unique_string(8)

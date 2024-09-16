@@ -1,5 +1,4 @@
 from rest_framework.permissions import SAFE_METHODS, BasePermission
-from urllib3 import request
 
 from authentication.models import User
 
