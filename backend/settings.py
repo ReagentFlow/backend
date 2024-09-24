@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     "authentication.apps.AuthenticationConfig",
     "reagents.apps.ReagentsConfig",
+    "devices.apps.DevicesConfig",
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+
+    "middleware.device_token.DeviceTokenMiddleware",
 ]
 
 ROOT_URLCONF = "backend.urls"
