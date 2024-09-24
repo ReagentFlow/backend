@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from authentication.api.permissions import IsAdminOrReadOnly
+from authentication.api.permissions import IsAdminOrDeviceOrReadOnly
 from reagents.models import Container
 from reagents.serializer import ContainerSerializer
 
@@ -14,7 +14,7 @@ from reagents.serializer import ContainerSerializer
 class ContainerModelViewSet(ModelViewSet):
     serializer_class = ContainerSerializer
     queryset = Container.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrDeviceOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["precursor"]
 

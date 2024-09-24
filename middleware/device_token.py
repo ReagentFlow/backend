@@ -8,7 +8,9 @@ class DeviceTokenMiddleware:
         self._get_response = get_response
 
     def __call__(self, request):
-        print(request.path)
+        request.device = None
+        request.is_device = False
+
         if not request.path.startswith("/data/containers"):
             return self._get_response(request)
 
@@ -23,4 +25,5 @@ class DeviceTokenMiddleware:
             return JsonResponse({'detail': 'Invalid or inactive device token.'}, status=403)
 
         request.device = device
+        request.is_device = True
         return self._get_response(request)
