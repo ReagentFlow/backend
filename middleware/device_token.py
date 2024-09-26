@@ -1,7 +1,7 @@
-from pydoc import resolve
-
 from django.http import JsonResponse
+
 from devices.models import Device
+
 
 class DeviceTokenMiddleware:
     def __init__(self, get_response):
@@ -22,7 +22,7 @@ class DeviceTokenMiddleware:
         try:
             device = Device.objects.get(token=token)
         except Device.DoesNotExist:
-            return JsonResponse({'detail': 'Invalid or inactive device token.'}, status=403)
+            return JsonResponse({"detail": "Invalid or inactive device token."}, status=403)
 
         request.device = device
         request.is_device = True
