@@ -48,5 +48,5 @@ class ReagentsViewSet(APIView):
 
 
 def get_container_barcode_pdf(request, container_id: str):
-    buffer = generate_pdf_with_barcode("code39", container_id)
+    buffer = generate_pdf_with_barcode("ean13", container_id)
     return HttpResponse(buffer, content_type="application/pdf")
