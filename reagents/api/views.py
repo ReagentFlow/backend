@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from authentication.api.permissions import IsAdminOrDeviceOrReadOnly
 from reagents.models import Container
 from reagents.serializer import ContainerSerializer
-from reagents.services import generate_pdf_with_barcode
+from reagents.services import generate_pdf_with_barcode, generate_unique_container_id
 
 
 class ContainerModelViewSet(ModelViewSet):
@@ -19,6 +19,10 @@ class ContainerModelViewSet(ModelViewSet):
     permission_classes = [IsAdminOrDeviceOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["precursor"]
+
+    def perform_create(self, serializer):
+        container_id = generate_unique_container_id()
+        serializer.save(container_id=container_id)
 
 
 class ReagentsViewSet(APIView):
