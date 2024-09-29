@@ -25,7 +25,6 @@ class ContainerModelViewSet(ModelViewSet):
         container_id = self.kwargs["pk"]
         return get_object_or_404(Container, container_id=container_id)
 
-
     def perform_create(self, serializer):
         container_id = generate_unique_container_id()
         serializer.save(container_id=container_id)
