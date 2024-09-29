@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Container(models.Model):
-    container_id = models.IntegerField(unique=True, null=False, blank=False)
+    container_id = models.BigIntegerField(unique=True, null=False, blank=True)
     name = models.CharField(max_length=100, null=False, blank=False)
     formula = models.CharField(max_length=100, null=False, blank=False)
     mass = models.FloatField(null=False, blank=False)

@@ -1,4 +1,5 @@
 import io
+import random
 
 import barcode
 from barcode.writer import ImageWriter
@@ -7,6 +8,17 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+
+from reagents.models import Container
+
+
+def generate_unique_container_id() -> int:
+    """Генерация уникального идентификатора контейнера"""
+    while True:
+        container_id = random.randint(100000000000, 999999999999)
+
+        if not Container.objects.filter(container_id=container_id).exists():
+            return container_id
 
 
 def generate_barcode_image(code: str, format_barcode: str) -> io.BytesIO:
