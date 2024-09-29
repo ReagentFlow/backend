@@ -2,6 +2,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -19,6 +20,11 @@ class ContainerModelViewSet(ModelViewSet):
     permission_classes = [IsAdminOrDeviceOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["precursor"]
+
+    def get_object(self):
+        container_id = self.kwargs["pk"]
+        return get_object_or_404(Container, container_id=container_id)
+
 
     def perform_create(self, serializer):
         container_id = generate_unique_container_id()
