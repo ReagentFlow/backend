@@ -36,18 +36,16 @@ class ReagentsViewSet(APIView):
     filterset_fields = ["precursor"]
 
     def get(self, request):
-        summary = Container.objects.values("cas", "qualification", "name", "formula", "density", "precursor").annotate(
-            total_volume=Sum("volume"), total_mass=Sum("mass")
+        summary = Container.objects.values("qualification", "name", "formula", "density", "precursor").annotate(
+            total_mass=Sum("mass")
         )
         data = [
             {
                 "name": item["name"],
                 "formula": item["formula"],
                 "mass": item["total_mass"],
-                "volume": item["total_volume"],
                 "density": item["density"],
                 "precursor": item["precursor"],
-                "cas": item["cas"],
                 "qualification": item["qualification"],
             }
             for item in summary
