@@ -26,7 +26,10 @@ SECRET_KEY = "django-insecure-0-4lscon^i=h9=celbe5_i2f#9zp&_ng0iciu)1pq4+e#+nu5)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = ['*']
+if DEBUG:
+    ALLOWED_HOSTS: list[str] = ["*"]
+else:
+    ALLOWED_HOSTS: list[str] = ["www.reagentflow.ru"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
