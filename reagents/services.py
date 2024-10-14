@@ -40,7 +40,7 @@ def generate_pdf_with_barcode(format_barcode: str, container_id: str) -> io.Byte
     barcode_io = generate_barcode_image(container_id, format_barcode)
     barcode_img = Image.open(barcode_io)
     barcode_img_reader = ImageReader(barcode_img)
-    p.drawImage(barcode_img_reader, 100, height - 150, width=100 * mm, height=40 * mm)
+    p.drawImage(barcode_img_reader, 50, height - 100, width=35 * mm, height=20 * mm)
 
     p.showPage()
     p.save()
