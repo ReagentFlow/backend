@@ -11,7 +11,7 @@ class DeviceTokenMiddleware:
         request.device = None
         request.is_device = False
 
-        if not request.path.startswith("/data/containers"):
+        if not request.path.startswith("/api/data/containers"):
             return self._get_response(request)
 
         token = request.headers.get("Device-Token")
