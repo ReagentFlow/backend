@@ -32,10 +32,16 @@ if DEBUG:
     ALLOWED_HOSTS.append("*")
 else:
     ALLOWED_HOSTS.append("www.reagentflow.ru")
+    SECURE_SSL_REDIRECT = True
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.reagentflow.ru",
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 # Application definition
@@ -189,7 +195,7 @@ CORS_ALLOW_CREDENTIALS = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
